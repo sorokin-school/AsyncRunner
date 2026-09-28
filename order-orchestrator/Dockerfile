@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+
+FROM gradle:8.10.2-jdk21 AS builder
+WORKDIR /workspace
+COPY . .
+RUN --mount=type=cache,target=/home/gradle/.gradle \
+    sed -i 's/\r$//' ./gradlew && \
+    chmod +x ./gradlew && \
+    ./gradlew --no-daemon :order-orchestrator:bootJar --configuration-cache --build-cache -x test
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+ENV JAVA_OPTS=""
+COPY --from=builder /workspace/order-orchestrator/build/libs/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["sh","-c","java $JAVA_OPTS -jar app.jar"]
