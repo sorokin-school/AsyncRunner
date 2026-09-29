@@ -1,6 +1,7 @@
 package dev.sorokin.domain;
 
 import dev.sorokin.api.OrderCreateRequestDto;
+import dev.sorokin.api.payment.PaymentStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class OrderService {
     ) {
         var entity = OrderEntity.builder()
                 .address(requestDto.address())
+                .description(requestDto.description())
+                .clientEstimate(requestDto.clientEstimate())
+                .paymentStatus(PaymentStatus.NEW)
                 .build();
 
         // todo асинхронная обработка заказа (создать таску)
