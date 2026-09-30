@@ -24,4 +24,4 @@ springdoc:
     path: /swagger-ui
 
 payment:
-  stub-url: ${PAYMENT_STUB_URL:http://localhost:8081}
+  payment-url: ${PAYMENT_STUB_URL:http://localhost:8081}
