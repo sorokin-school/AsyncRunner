@@ -1,6 +1,5 @@
 package dev.sorokin.async;
 
-
 public enum TaskStatus {
     NEW,
     IN_PROGRESS,

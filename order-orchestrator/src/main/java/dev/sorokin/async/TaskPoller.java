@@ -28,7 +28,6 @@ public class TaskPoller {
                 .map(AsyncTaskEntity::getId)
                 .toList();
 
-
         if (tasksBatch.isEmpty()) {
             return;
         }
@@ -37,25 +36,30 @@ public class TaskPoller {
         for (AsyncTaskEntity task : tasksBatch) {
             taskDispatcher.dispatch(task);
         }
-
     }
 
     private List<AsyncTaskEntity> pickTasksForProcessing() {
+        OffsetDateTime now = OffsetDateTime.now();
+        log.info("Attempting to peek tasks with now = {}", now);
         return txTemplate.execute(status -> {
             List<AsyncTaskEntity> tasks = taskRepository.peekBatchForProcessing(
                     TaskStatus.NEW.name(),
                     TaskStatus.FAILED_RETRYABLE.name(),
                     TaskStatus.IN_PROGRESS.name(),
-                    OffsetDateTime.now(),
+                    now,  //единый момент времени для лога и запроса
                     5 //потом вынести
             );
-            var nextProcessedTime = OffsetDateTime.now().plus(Duration.ofSeconds(10)); //потом вынести
+            log.info("Peeked tasks count: {}", tasks.size());
+            var nextProcessedTime = OffsetDateTime.now().plus(Duration.ofSeconds(60)); //потом вынести
             for(AsyncTaskEntity task : tasks){
+                //увеличиваем счётчик только для реальных новых попыток
+                //если задача зависла в IN_PROGRESS и подбирается повторно — это recovery, не новая попытка
+                if (task.getTaskStatus() != TaskStatus.IN_PROGRESS) {
+                    var attempts = task.getAttempts() == null
+                            ? 1 : task.getAttempts() + 1;
+                    task.setAttempts(attempts);
+                }
                 task.setTaskStatus(TaskStatus.IN_PROGRESS);
-
-                var attempts = task.getAttempts() == null
-                        ? 1 : task.getAttempts()+1;
-                task.setAttempts(attempts);
                 task.setNextAttemptAt(nextProcessedTime);
             }
             taskRepository.saveAll(tasks);

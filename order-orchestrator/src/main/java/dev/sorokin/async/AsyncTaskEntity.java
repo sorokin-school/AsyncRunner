@@ -33,6 +33,11 @@ public class AsyncTaskEntity {
     @Column(name = "next_attempt_at")
     private OffsetDateTime nextAttemptAt;
 
+    //этап обработки (авторизация, перерасчет, снятие средств)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "step", nullable = false)
+    private TaskStep step;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 

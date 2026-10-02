@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-/**
- * HTTP-stub платежного шлюза: авторизация и списание
- */
 @Slf4j
 @RestController
 @RequestMapping("/payment")
@@ -98,7 +95,7 @@ public class PaymentStubController {
         return ResponseEntity.ok(
                 new CapturePaymentResponseDto(
                         captureId,
-                        capturePaymentRequest.captureAmount(),
+                        capturePaymentRequest.capturedAmount(),
                         CaptureStatus.CAPTURED,
                         null
                 )

@@ -10,7 +10,7 @@ import java.util.UUID;
 public record OrderDto(
         UUID id,
         String address,
-        String description, // todo остальные поля
+        String description,
         //оценочная стоимость, отправленная фронтендом
         BigDecimal clientEstimate,
         //фактически авторизованная сумма

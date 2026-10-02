@@ -13,13 +13,13 @@ import org.springframework.web.service.annotation.PostExchange;
 @HttpExchange(accept = "application/json", contentType = "application/json")
 public interface StubHttpClient {
 
-    @PostExchange("/authorize")
+    @PostExchange("/payment/authorize")
     AuthorizePaymentResponseDto authorize(@RequestBody AuthorizePaymentRequestDto authorizeRequest);
 
-    @PostExchange("/calculate-price")
+    @PostExchange("/warehouse/calculate-price")
     CalculatePricingResponseDto calculatePricing(@RequestBody CalculatePricingRequestDto calculatePricingRequest);
 
-    @PostExchange("/capture")
+    @PostExchange("/payment/capture")
     CapturePaymentResponseDto capture(@RequestBody CapturePaymentRequestDto captureRequest);
 
 

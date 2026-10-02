@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 
-/**
- * HTTP-stub сервиса пересчёта цен
- */
 @Slf4j
 @RestController
 @RequestMapping("/warehouse")

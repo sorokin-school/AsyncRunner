@@ -5,6 +5,7 @@ import dev.sorokin.api.payment.PaymentStatus;
 import dev.sorokin.async.AsyncTaskEntity;
 import dev.sorokin.async.TaskEntityRepository;
 import dev.sorokin.async.TaskStatus;
+import dev.sorokin.async.TaskStep;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,10 +37,10 @@ public class OrderService {
         var createdOrder = orderRepository.save(entity);
         log.info("Created order id = {}", createdOrder.getId());
 
-        // todo асинхронная обработка заказа (создать таску)
         var task = AsyncTaskEntity.builder()
                 .orderId(createdOrder.getId())
                 .taskStatus(TaskStatus.NEW)
+                .step(TaskStep.AUTH)
                 .build();
 
         var createdTask = taskRepository.save(task);
@@ -49,6 +50,7 @@ public class OrderService {
         return createdOrder;
     }
 
+    @Transactional(readOnly = true)
     public Optional<OrderEntity> findOrder(UUID id) {
         return orderRepository.findById(id);
     }

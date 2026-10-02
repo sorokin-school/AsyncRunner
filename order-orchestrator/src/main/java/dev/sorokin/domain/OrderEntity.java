@@ -19,7 +19,7 @@ public class OrderEntity {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false) //не уверена насчет генерации
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "address", nullable = false)

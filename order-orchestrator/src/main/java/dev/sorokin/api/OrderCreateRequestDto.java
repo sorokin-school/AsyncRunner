@@ -6,5 +6,5 @@ public record OrderCreateRequestDto(
         String address,
         String description,
         //оценочная стоимость, отправленная фронтендом
-        BigDecimal clientEstimate                        // todo остальные поля
+        BigDecimal clientEstimate
 ) { }

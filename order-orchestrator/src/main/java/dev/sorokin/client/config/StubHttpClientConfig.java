@@ -18,9 +18,11 @@ public class StubHttpClientConfig {
     @Bean
     public ClientHttpRequestFactory jdkRequestFactory() {
         HttpClient httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10)) //поменять потом
+                .connectTimeout(Duration.ofSeconds(10))
                 .build();
-        return new JdkClientHttpRequestFactory(httpClient);
+        JdkClientHttpRequestFactory factory = new JdkClientHttpRequestFactory(httpClient);
+        factory.setReadTimeout(Duration.ofSeconds(30));
+        return factory;
     }
 
     @Bean
